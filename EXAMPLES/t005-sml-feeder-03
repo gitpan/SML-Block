@@ -1,0 +1,16 @@
+#!/usr/bin/perl -w
+
+	use strict;
+	use warnings;
+	use Data::Dump qw(pp);
+	use	SML::Template;
+	use	SML::Block;
+	use	SML::Builder;
+	
+	print "START\n";
+	
+	my	$sml_block				= new SML::Block(); $sml_block->parse( scalar(qx(cat feeder-block.sml )) );
+
+	print "PARSED\n";
+	
+	print $sml_block->feed_template( scalar(qx(cat feeder-template.sml )) );

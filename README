@@ -1,0 +1,47 @@
+NAME
+
+    SML::Block - Content::Block using SIMPLIFIED MARKUP LANGUAGE
+
+     $Revision: 1.2 $
+     $Date: 2004/05/13 21:04:19 $
+
+METHODS
+
+    new
+         $sml = SML::Block->new();
+ 
+    parse ( $sml )
+        Initialize the sml data. There should be SML data optionally
+        separated into some sections. Beginings of sections are marked by
+        section markers:
+
+         <!section section_name other="1" parameters="2">
+
+        where !section is mandatory word, section_name is replaced by the
+        name of the section and the other parameters could be whathever You
+        want, however currently ignored, are reserved for future use for
+        content type description, dynamical source definition etc...
+
+        Unmarked parts are stored in section named '_'.
+
+        Multiple sections are concatenated into one final section data.
+
+    add_section_data ( $section_name, $data )
+        Add single or multiple items into specified section. $data should be
+        single SML item or arrayref of items.
+
+    get_section_arrayref ( $section_name )
+        Get section sml items as arrayref.
+
+    get_section_sml ( $section_name )
+        Get section as plain sml text data.
+
+    get_sections_names ( * )
+        Get names of all sections within block. In array context as array,
+        otherwise as arrayref.
+
+    feed_template ( $template )
+        Feed block data using parsed|unparsed sml template.
+
+TODO
+

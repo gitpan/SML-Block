@@ -1,0 +1,299 @@
+head	1.2;
+access;
+symbols;
+locks
+	root:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2004.05.13.21.04.19;	author root;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.05.13.11.30.34;	author root;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@### //////////////////////////////////////////////////////////////////////////
+#
+#	TOP
+#
+
+=head1 NAME
+
+SML::Block - Content::Block using SIMPLIFIED MARKUP LANGUAGE
+
+=cut
+
+#------------------------------------------------------
+# 2004/05/13 12:03 - $Date: 2004/05/13 11:30:34 $
+# (C) Daniel Peder & Infoset s.r.o., all rights reserved
+# http://www.infoset.com, Daniel.Peder@@infoset.com
+#------------------------------------------------------
+
+###																###
+###	this document is edited with tabs having only 4 chars width ###
+###																###
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: package
+#
+
+	package SML::Block;
+
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: version
+#
+
+	use vars qw( $VERSION $VERSION_LABEL $REVISION $REVISION_DATETIME $REVISION_LABEL $PROG_LABEL );
+
+	$VERSION           = '0.10';
+	
+	$REVISION          = (qw$Revision: 1.1 $)[1];
+	$REVISION_DATETIME = join(' ',(qw$Date: 2004/05/13 11:30:34 $)[1,2]);
+	$REVISION_LABEL    = '$Id: Block.pm_rev 1.1 2004/05/13 11:30:34 root Exp root $';
+	$VERSION_LABEL     = "$VERSION (rev. $REVISION $REVISION_DATETIME)";
+	$PROG_LABEL        = __PACKAGE__." - ver. $VERSION_LABEL";
+
+=pod
+
+ $Revision: 1.1 $
+ $Date: 2004/05/13 11:30:34 $
+
+=cut
+
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: debug
+#
+
+	use vars qw( $DEBUG ); $DEBUG=0;
+	
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: constants
+#
+
+	# use constant	name		=> 'value';
+	
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: modules use
+#
+
+	require 5.005_62;
+
+	use strict                  ;
+	use warnings                ;
+	
+	use	SML::Parser				;
+	use	SML::Builder			;
+	
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: methods
+#
+
+=head1 METHODS
+
+=over 4
+
+=cut
+
+
+
+### ##########################################################################
+
+=item	new
+
+ $sml = SML::Block->new();
+ 
+=cut
+
+### --------------------------------------------------------------------------
+sub		new
+### --------------------------------------------------------------------------
+{
+	my( $proto ) = @@_;
+	bless {}, ref( $proto ) || $proto;
+}
+
+
+
+### ##########################################################################
+
+=item	parse ( $sml )
+
+Initialize the sml data.
+
+=cut
+
+### --------------------------------------------------------------------------
+sub		parse
+### --------------------------------------------------------------------------
+{
+	my( $self, $sml )=@@_;
+	
+		die "invalid sml data reference" if ref($sml) and ref($sml) ne 'ARRAY'; # very trivial check
+	
+		$self->{sml}	= SML::Parser->parse( $sml ) if !ref($sml); # string representation
+	my	$items			= $self->{sml};
+	my	$section_name	= '_';
+	my	$section		= $self->{section} = {};
+	my	$f_drop_blanks	= 1;	# flag: set to drop blanks,whitespaces,etc... around section or element boundary
+	for	my $item	(@@$items)
+	{
+		if(	$item->[0] eq 'E' and $item->[1] eq '!' and lc($item->[2]) eq 'section' and  $item->[3] =~ /([\w\.\-]+)/)
+		{
+			$section_name = $1;
+			$f_drop_blanks	= 1;	# drop blanks next to this marker
+			next;
+		}
+		elsif(	$f_drop_blanks and ( $item->[0] eq 'T' ) and ( $item->[1] =~ /^\s*$/os ))
+		{
+			next;
+		}
+		
+		$f_drop_blanks	= 0;	# once we are here, the blanks are behind us
+		
+		push @@{$section->{$section_name}}, $item;
+	}
+
+}
+
+
+### ##########################################################################
+
+=item	get_section_arrayref ( $section_name )
+
+Get sml items as arrayref.
+
+=cut
+
+### --------------------------------------------------------------------------
+sub		get_section_arrayref
+### --------------------------------------------------------------------------
+{
+	my( $self, $section_name )=@@_;
+	$self->{section}{$section_name}
+}
+
+
+### ##########################################################################
+
+=item	get_section_sml ( $section_name )
+
+Get sml items as arrayref.
+
+=cut
+
+### --------------------------------------------------------------------------
+sub		get_section_sml
+### --------------------------------------------------------------------------
+{
+	my( $self, $section_name )=@@_;
+	SML::Builder->build( $self->{section}{$section_name} )
+}
+
+
+### ##########################################################################
+
+=item	get_sections_names ( * )
+
+Get names of all sections within block. In array context as array, otherwise
+as arrayref.
+
+=cut
+
+### --------------------------------------------------------------------------
+sub		get_sections_names
+### --------------------------------------------------------------------------
+{
+	my( $self )=@@_;
+	
+	wantarray ? keys( %{$self->{section}} ) : \keys( %{$self->{section}} );
+
+}
+
+
+
+
+
+
+
+=back
+
+=cut
+
+
+1;
+
+__DATA__
+
+__END__
+
+### //////////////////////////////////////////////////////////////////////////
+#
+#	SECTION: TODO
+#
+
+=head1 TODO	
+
+
+=cut
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d8 1
+a8 1
+SML::Content::Block - Content::Block using SIMPLIFIED MARKUP LANGUAGE
+d13 1
+a13 1
+# 2004/05/13 12:03 - $Date: 2004/05/12 22:18:34 $
+d27 1
+a27 1
+	package SML::Content::Block;
+d39 3
+a41 3
+	$REVISION          = (qw$Revision: 1.7 $)[1];
+	$REVISION_DATETIME = join(' ',(qw$Date: 2004/05/12 22:18:34 $)[1,2]);
+	$REVISION_LABEL    = '$Id: Template.pm_rev 1.7 2004/05/12 22:18:34 root Exp root $';
+d47 2
+a48 2
+ $Revision: 1.7 $
+ $Date: 2004/05/12 22:18:34 $
+d80 1
+d100 1
+a100 1
+ $sml = SML::Content::Block->new();
+d113 1
+d140 1
+d143 1
+a143 1
+		elsif(	$f_drop_blanks and $item->[0] eq 'T' and $item->[1] =~ /^\s*$/os )
+d154 55
+@

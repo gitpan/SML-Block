@@ -1,0 +1,22 @@
+<!section head-title>
+This is the simple text to put somewhere
+
+<!section main><!-- the word 'main' doesn't have any special meaning -->
+<h>An heading</h>
+<p>text paragraph under heading
+<p>other text paragraph
+
+<!section author><!-- the word 'author' doesn't have any special meaning -->
+<e-mail>Daniel.Peder@Infoset.Com
+
+<!-- 
+
+	this block doesn't have any idea what meaning 
+	got these several tags contained by it,
+	
+	except the <!section [word]> tag which 
+	separates named sections of this block
+	
+	however, everything else is SML, ofcourse
+	
+--> 

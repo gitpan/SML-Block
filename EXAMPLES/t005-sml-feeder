@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+
+	use strict;
+	use warnings;
+	use Data::Dump qw(pp);
+	use	SML::Template;
+	use	SML::Block;
+	use	SML::Builder;
+	
+	print "START\n";
+	
+	my	$sml_block				= new SML::Block(); $sml_block->parse( scalar(qx(cat feeder-block.sml )) );
+	my	$sml_template			= new SML::Template(); $sml_template->parse( scalar(qx(cat feeder-template.sml )) );
+
+	print "PARSED\n";
+
+	while( my( $token_name, $value )=each( %{$sml_block->{section}} ))
+	{
+		my	$token_value	= SML::Builder->build( $value );
+		$sml_template->set_token_value( $token_name, $token_value );
+	}
+	
+	my	$result = $sml_template->build();
+	
+	print $result;
